@@ -22,6 +22,7 @@ func DatabaseConnection(ctx context.Context, connectionString string) (*gorm.DB,
 		&models.Products{},
 		&models.Categories{},
 		&models.Carts{},
+		&models.Customer{},
 	); err != nil {
 		panic("Failed to create tables")
 	}

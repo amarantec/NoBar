@@ -8,6 +8,8 @@ import (
 )
 
 type Service interface {
+	WelcomeCustomer(ctx context.Context, customer models.Customer) (bool, error)
+
 	InsertCategory(ctx context.Context, category models.Categories) (models.Categories, error)
 	ListCategories(ctx context.Context) ([]models.Categories, error)
 	GetCategory(ctx context.Context, id uint) (models.Categories, error)
@@ -16,6 +18,12 @@ type Service interface {
 	InsertProduct(ctx context.Context, product models.Products) (models.Products, error)
 	ListProducts(ctx context.Context) ([]models.Products, error)
 	GetProduct(ctx context.Context, id uint) (models.Products, error)
+
+	GetCartProducts(ctx context.Context, customerId string) ([]models.CartProductResponse, error)
+	GetCartItemsCount(ctx context.Context, customerId string) (int64, error)
+	AddToCart(ctx context.Context, item models.Carts) (bool, error)
+	UpdateQuantity(ctx context.Context, customerId string, productsId uint, quantity int64) (bool, error)
+	RemoveItemFromCart(ctx context.Context, customerId string, productsId uint) (bool, error)
 }
 
 type ServicePostgres struct {

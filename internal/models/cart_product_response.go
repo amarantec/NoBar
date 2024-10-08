@@ -1,7 +1,7 @@
 package models
 
 type CartProductResponse struct {
-	ProductID uint    `json:"product_id"`
+	ProductsID uint    `json:"product_id"`
 	Name      string  `json:"name"`
 	ImageURL  string  `json:"image_url"`
 	Price     float64 `json:"price"`

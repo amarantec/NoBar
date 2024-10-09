@@ -44,3 +44,17 @@ func (s *ServicePostgres) GetProduct(ctx context.Context, id uint) (models.Produ
 
 	return product, nil
 }
+
+func (s *ServicePostgres) ListProductsByCategory(ctx context.Context, categoryUrl string) ([]models.Products, error) {
+	products := []models.Products{}
+
+	if err := s.Db.WithContext(ctx).
+		Model(models.Products{}).
+		Joins("JOIN categories ON categories.id = products.categories_id").
+		Where("categories.url = ? ", categoryUrl).
+		Find(&products).Error; err != nil {
+		return []models.Products{}, err
+	}
+
+	return products, nil
+}

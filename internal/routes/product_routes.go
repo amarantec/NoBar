@@ -66,3 +66,19 @@ func getProduct(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+func listProductsByCategory(c *gin.Context) {
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	categoryUrl := c.Param("categoryUrl")
+
+	response, err := service.ListProductsByCategory(ctxTimeout, categoryUrl)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,
+			gin.H{"message": "could not list products",
+				"error": err.Error()})
+	}
+
+	c.JSON(http.StatusOK, response)
+}

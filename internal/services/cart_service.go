@@ -40,7 +40,7 @@ func (s *ServicePostgres) GetCartItemsCount(ctx context.Context, customerId stri
 
 	if err :=
 		s.Db.WithContext(ctx).
-			Model(&models.Carts{}).
+			Model(models.Carts{}).
 			Where("customer_id = ?", customerId).
 			Count(&count).Error; err != nil {
 		count = 0
@@ -70,7 +70,7 @@ func (s *ServicePostgres) AddToCart(ctx context.Context, item models.Carts) (boo
 func (s *ServicePostgres) UpdateQuantity(ctx context.Context, customerId string, productsId uint, quantity int64) (bool, error) {
 	if err :=
 		s.Db.WithContext(ctx).
-			Model(&models.Carts{}).
+			Model(models.Carts{}).
 			Where("customer_id = ? AND products_id = ?", customerId, productsId).
 			UpdateColumn("quantity", gorm.Expr("quantity + ?", quantity)).
 			Error; err != nil {

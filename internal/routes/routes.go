@@ -22,6 +22,7 @@ func SetRoutes(r *gin.Engine) {
 		productsGroup.POST("/insert-product", insertProduct)
 		productsGroup.GET("/list-products", listProducts)
 		productsGroup.GET("/get-product/:productId", getProduct)
+		productsGroup.GET("/list-products-by-category/:categoryUrl", listProductsByCategory)
 	}
 
 	cartGroup := r.Group("/cart")

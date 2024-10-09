@@ -18,6 +18,7 @@ type Service interface {
 	InsertProduct(ctx context.Context, product models.Products) (models.Products, error)
 	ListProducts(ctx context.Context) ([]models.Products, error)
 	GetProduct(ctx context.Context, id uint) (models.Products, error)
+	ListProductsByCategory(ctx context.Context, categoryUrl string) ([]models.Products, error)
 
 	GetCartProducts(ctx context.Context, customerId string) ([]models.CartProductResponse, error)
 	GetCartItemsCount(ctx context.Context, customerId string) (int64, error)

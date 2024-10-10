@@ -25,6 +25,10 @@ type Service interface {
 	AddToCart(ctx context.Context, item models.Carts) (bool, error)
 	UpdateQuantity(ctx context.Context, customerId string, productsId uint, quantity int64) (bool, error)
 	RemoveItemFromCart(ctx context.Context, customerId string, productsId uint) (bool, error)
+
+	GetOrderDetails(ctx context.Context, customerId string, orderId uint) (models.OrderDetailsResponse, error)
+	GetOrders(ctx context.Context, customerId string) ([]models.OrderOverviewResponse, error)
+	PlaceOrder(ctx context.Context, customerId string) (bool, error)
 }
 
 type ServicePostgres struct {

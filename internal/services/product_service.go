@@ -22,6 +22,7 @@ func (s *ServicePostgres) ListProducts(ctx context.Context) ([]models.Products, 
 
 	if err :=
 		s.Db.WithContext(ctx).
+			Preload("Categories").
 			Find(&products).Error; err != nil {
 		return []models.Products{}, err
 	}

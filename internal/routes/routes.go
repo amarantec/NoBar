@@ -34,4 +34,11 @@ func SetRoutes(r *gin.Engine) {
 		cartGroup.GET("/get-cart-products", middlewares.Auth, getCartProducts)
 
 	}
+
+	orderGroup := r.Group("/order")
+	{
+		orderGroup.POST("/place-order", middlewares.Auth, placeOrder)
+		orderGroup.GET("/get-order", middlewares.Auth, getOrders)
+		orderGroup.GET("/get-order-details/:orderId", middlewares.Auth, getOrderDetails)
+	}
 }

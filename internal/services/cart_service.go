@@ -94,3 +94,4 @@ func (s *ServicePostgres) RemoveItemFromCart(ctx context.Context, customerId str
 	}
 	return true, nil
 }
+

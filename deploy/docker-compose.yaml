@@ -1,0 +1,29 @@
+networks:
+  nobar_network:
+
+services:
+  nobar-go-db:
+    networks:
+      - nobar_network
+    image: postgres:16
+    container_name: nobar-go-db
+    env_file:
+      - ../config/.env 
+    volumes:
+     - postgres_data:/var/lib/postgresql/data
+
+  server:
+    networks:
+      - nobar_network
+    build:
+      context: ../
+      dockerfile: deploy/Dockerfile
+    container_name: nobar_server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - nobar-go-db
+    env_file:
+      - ../config/.env
+volumes:
+  postgres_data:

@@ -18,9 +18,9 @@ func main() {
 	ctx := context.Background()
 
 	host := os.Getenv("DB_HOST")
-	username := os.Getenv("DB_USER")
-	password := os.Getenv("DB_PASSWORD")
-	databaseName := os.Getenv("DB_NAME")
+	username := os.Getenv("POSTGRES_USER")
+	password := os.Getenv("POSTGRES_PASSWORD")
+	databaseName := os.Getenv("POSTGRES_DB")
 	port := os.Getenv("DB_PORT")
 	server := os.Getenv("SERVER_PORT")
 	connectionString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=America/Sao_Paulo", host, username, password, databaseName, port)
@@ -42,7 +42,7 @@ func main() {
 }
 
 func loadEnv() {
-	err := godotenv.Load(".env")
+	err := godotenv.Load("../../config/.env")
 	if err != nil {
 		log.Fatal("error loading .env file")
 	}

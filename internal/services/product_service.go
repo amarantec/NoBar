@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 	"errors"
-
+    "strings"
 	"github.com/amarantec/nobar/internal/models"
 	"gorm.io/gorm"
 )
@@ -35,6 +35,7 @@ func (s *ServicePostgres) GetProduct(ctx context.Context, id uint) (models.Produ
 
 	if err :=
 		s.Db.WithContext(ctx).
+			Preload("Categories").
 			Where("id = ?", id).
 			First(&product).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -58,4 +59,19 @@ func (s *ServicePostgres) ListProductsByCategory(ctx context.Context, categoryUr
 	}
 
 	return products, nil
+}
+
+func (s *ServicePostgres) SearchProducts(ctx context.Context, searchText string) ([]models.Products, error) {
+    products := []models.Products{}
+
+    if err :=
+        s.Db.WithContext(ctx).
+           Preload("Categories").
+           Where("LOWER(name) LIKE ? OR LOWER(description) LIKE ?", strings.ToLower("%"+searchText+"%"),
+				strings.ToLower("%"+searchText+"%")).
+           Find(&products).Error; err != nil {
+                return []models.Products{}, err
+                }
+
+    return products, nil
 }

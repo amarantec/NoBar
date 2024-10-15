@@ -6,6 +6,7 @@ import (
 )
 
 func SetRoutes(r *gin.Engine) {
+	r.GET("/home", homePage)
 
 	r.POST("/welcome-customer", welcomeCustomer)
 
@@ -23,6 +24,7 @@ func SetRoutes(r *gin.Engine) {
 		productsGroup.GET("/list-products", listProducts)
 		productsGroup.GET("/get-product/:productId", getProduct)
 		productsGroup.GET("/list-products-by-category/:categoryUrl", listProductsByCategory)
+        productsGroup.GET("/search-products/:searchText", searchProducts)
 	}
 
 	cartGroup := r.Group("/cart")

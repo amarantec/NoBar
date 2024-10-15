@@ -52,19 +52,32 @@ func getProduct(c *gin.Context) {
 
 	id, err := strconv.Atoi(c.Param("productId"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest,
+		c.HTML(http.StatusBadRequest,
+			"bad_request.html",
 			gin.H{"message": "invalid parameter",
 				"error": err.Error()})
 	}
 
 	response, err := service.GetProduct(ctxTimeout, uint(id))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError,
+		c.HTML(http.StatusInternalServerError,
+			"internal_server_error.html",
 			gin.H{"message": "could not get this product",
 				"error": err.Error()})
+		return
 	}
 
-	c.JSON(http.StatusOK, response)
+	if response.Name == "" {
+		c.HTML(http.StatusNotFound,
+			"not_found.html",
+			gin.H{"message": "product not found"})
+		return
+	}
+
+	c.HTML(http.StatusOK,
+		"product.html",
+		gin.H{"Products": response},
+	)
 }
 
 func listProductsByCategory(c *gin.Context) {
@@ -78,7 +91,25 @@ func listProductsByCategory(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError,
 			gin.H{"message": "could not list products",
 				"error": err.Error()})
+        return
 	}
 
 	c.JSON(http.StatusOK, response)
+}
+
+func searchProducts(c *gin.Context) {
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+    searchText := c.Param("searchText")
+
+    response, err := service.SearchProducts(ctxTimeout, searchText)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError,
+            gin.H{"message": "could no search products",
+                "error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, response)
 }

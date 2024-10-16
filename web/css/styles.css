@@ -1,0 +1,84 @@
+a:link {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+  color: blue;
+}
+
+.product-img-div {
+    display: flex;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+  
+.content {
+    align-items: center;
+    text-align: center;
+    padding: 5px;
+}
+  
+.product-img {
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    border-radius: 50%;
+    width: 250px;
+    border: solid 2.5px #545C52;
+}  
+  
+.product-price {
+    color: green;
+    font-size: 16.px;
+    font-weight: bold;
+}
+  
+header {
+    background-color: #545C52;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    align-items: center;
+    display: flex;
+    padding-left: 200px;
+}
+
+
+header nav {
+    margin-top: 10px;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+header * {
+    display: inline;
+}
+
+header li {
+    padding-top: 10px;
+    justify-content: center;
+    margin: 20px;
+}
+
+header li a {
+    text-decoration: none;
+}
+
+header a {
+    color: whitesmoke;
+}
+
+
+header a:hover {
+  border-radius: 15%;
+  background-color: white;
+  color: black;
+}

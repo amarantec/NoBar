@@ -41,5 +41,6 @@ func welcomeCustomer(c *gin.Context) {
 				"error": err.Error()})
 		return
 	}
+
 	c.JSON(http.StatusCreated, token)
 }

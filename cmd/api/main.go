@@ -36,6 +36,8 @@ func main() {
 
 	routes.ConfigureHandler(db)
 	r := gin.Default()
+	r.Static("/css", "../../web/css")
+	r.LoadHTMLGlob("../../web/templates/*.html")
 	routes.SetRoutes(r)
 
 	r.Run(":" + server)

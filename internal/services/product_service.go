@@ -75,3 +75,37 @@ func (s *ServicePostgres) SearchProducts(ctx context.Context, searchText string)
 
     return products, nil
 }
+
+func (s *ServicePostgres) UpdateProduct(ctx context.Context, product models.Products) (bool, error) {
+    result :=
+        s.Db.WithContext(ctx).
+            Where("id = ?", product.ID).
+            Updates(models.Products{
+                Name: product.Name,
+                Description: product.Description,
+                ImageURL: product.ImageURL,
+                CategoriesID: product.CategoriesID,
+                Price: product.Price,
+            })
+
+    if result.Error != nil {
+        return false, result.Error
+    } else if result.RowsAffected == 0 {
+        return false, nil
+    }
+
+    return true, nil
+}
+
+func (s *ServicePostgres) DeleteProduct(ctx context.Context, id uint) (bool, error) {
+    if err :=
+        s.Db.WithContext(ctx).
+            Delete(&models.Products{}, id).Error; err != nil {
+                if errors.Is(err, gorm.ErrRecordNotFound) {
+                    return false, nil
+                }
+                return false, err
+            }
+
+    return true, nil
+}

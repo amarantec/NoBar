@@ -10,6 +10,9 @@ import (
 type Service interface {
 	WelcomeCustomer(ctx context.Context, customer models.Customer) (bool, error)
 
+    Register (ctx context.Context, user models.Users) (bool, error)
+    Login (ctx context.Context, user models.Users) (uint, error)
+
 	InsertCategory(ctx context.Context, category models.Categories) (models.Categories, error)
 	ListCategories(ctx context.Context) ([]models.Categories, error)
 	GetCategory(ctx context.Context, id uint) (models.Categories, error)
@@ -20,6 +23,8 @@ type Service interface {
 	GetProduct(ctx context.Context, id uint) (models.Products, error)
 	ListProductsByCategory(ctx context.Context, categoryUrl string) ([]models.Products, error)
     SearchProducts(ctx context.Context, searchText string) ([]models.Products, error)
+    UpdateProduct(ctx context.Context, product models.Products) (bool, error)
+    DeleteProduct(ctx context.Context, id uint) (bool, error)
 
 	GetCartProducts(ctx context.Context, customerId string) ([]models.CartProductResponse, error)
 	GetCartItemsCount(ctx context.Context, customerId string) (int64, error)

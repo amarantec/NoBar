@@ -7,10 +7,18 @@ import (
 	"time"
 
 	"github.com/amarantec/nobar/internal/models"
+    "github.com/amarantec/nobar/internal/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func insertProduct(c *gin.Context) {
+    adminId := c.MustGet("userType").(string)
+    if adminId != utils.AdminTokenType {
+        c.JSON(http.StatusForbidden,
+            gin.H{"message": "Access denied"})
+        return
+    }
+
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -113,3 +121,65 @@ func searchProducts(c *gin.Context) {
 
     c.JSON(http.StatusOK, response)
 }
+
+func updateProduct(c *gin.Context) {
+    adminId := c.MustGet("userType").(string)
+    if adminId != utils.AdminTokenType {
+        c.JSON(http.StatusForbidden,
+            gin.H{"message": "Access denied"})
+        return
+    }
+
+    ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+    product := models.Produtcs{}
+
+    if err :=
+        c.ShouldBindJSON(&product); err != nil {
+            c.JSON(http.StatusBadRequest,
+                gin.H{"message": "could not decode this request",
+                    "error": err.Error()}
+             return
+        }
+
+    response, err := service.UpdateProduct(ctxTimeout, product)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError,
+            gin.H{"message": "could not update this product",
+                "error": err.Error()}
+        return
+    }
+
+    c.JSON(http.StatusNoContent, response)
+}
+
+func deleteProduct(c *gin.Context) {
+    adminId := c.MustGet("userType").(string)
+    if adminId != utils.AdminTokenType {
+        c.JSON(http.StatusForbidden,
+            gin.H{"message": "Access denied"})
+        return
+    }
+
+    ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+    id, err := strconv.Atoi(c.Param("productId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest,
+			gin.H{"message": "invalid parameter",
+				"error": err.Error()})
+	}
+
+    response, err := service.DeleteProduct(ctxTimeout, uint(id))
+    if err != nil {
+        c.JSON(http.StatusInternalServerError,
+            gin.H{"message": "could not delete this product",
+                "error": err.Error()}
+        return
+    }
+
+    c.JSON(http.StatusNoContent, response)
+}
+

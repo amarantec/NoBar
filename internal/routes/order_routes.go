@@ -5,13 +5,18 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-
-	"github.com/amarantec/nobar/internal/middlewares"
+    "github.com/amarantec/nobar/internal/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func placeOrder(c *gin.Context) {
-	customerId := c.GetString(middlewares.CUSTOMERID)
+	customerId := c.MustGet("userType").(string)
+    if customerId != utils.CustomerTokenType {
+        c.JSON(http.StatusForbidden,
+            gin.H{"message": "Access denied"})
+        return
+    }
+
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -27,7 +32,13 @@ func placeOrder(c *gin.Context) {
 }
 
 func getOrders(c *gin.Context) {
-	customerId := c.GetString(middlewares.CUSTOMERID)
+    customerId := c.MustGet("userType").(string)
+    if customerId != utils.CustomerTokenType {
+        c.JSON(http.StatusForbidden,
+            gin.H{"message": "Access denied"})
+        return
+    }
+
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -42,7 +53,13 @@ func getOrders(c *gin.Context) {
 }
 
 func getOrderDetails(c *gin.Context) {
-	customerId := c.GetString(middlewares.CUSTOMERID)
+    customerId := c.MustGet("userType").(string)
+    if customerId != utils.CustomerTokenType {
+        c.JSON(http.StatusForbidden,
+            gin.H{"message": "Access denied"})
+        return
+    }
+
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 

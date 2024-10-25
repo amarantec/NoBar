@@ -34,7 +34,7 @@ func welcomeCustomer(c *gin.Context) {
 		return
 	}
 
-	token, err := utils.GenerateToken(customerId)
+	token, err := utils.GenerateToken(utils.CustomerTokenType, customerId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest,
 			gin.H{"message": "could not generate token",

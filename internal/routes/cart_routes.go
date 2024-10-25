@@ -5,14 +5,19 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-
-	"github.com/amarantec/nobar/internal/middlewares"
 	"github.com/amarantec/nobar/internal/models"
+    "github.com/amarantec/nobar/internal/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func getCartProducts(c *gin.Context) {
-	customerId := c.GetString(middlewares.CUSTOMERID)
+	customerId := c.MustGet("userType").(string)
+    if customerId != utils.CustomerTokenType {
+        c.JSON(http.StatusForbidden,
+            gin.H{"message": "Access denied"})
+        return
+    }
+
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -28,7 +33,13 @@ func getCartProducts(c *gin.Context) {
 }
 
 func getCartItemsCount(c *gin.Context) {
-	customerId := c.GetString(middlewares.CUSTOMERID)
+    customerId := c.MustGet("userType").(string)
+    if customerId != utils.CustomerTokenType {
+        c.JSON(http.StatusForbidden,
+            gin.H{"message": "Access denied"})
+        return
+    }
+
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -44,7 +55,13 @@ func getCartItemsCount(c *gin.Context) {
 }
 
 func addToCart(c *gin.Context) {
-	customerId := c.GetString(middlewares.CUSTOMERID)
+    customerId := c.MustGet("userType").(string)
+    if customerId != utils.CustomerTokenType {
+        c.JSON(http.StatusForbidden,
+            gin.H{"message": "Access denied"})
+        return
+    }
+
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -71,7 +88,13 @@ func addToCart(c *gin.Context) {
 }
 
 func updateQuantity(c *gin.Context) {
-	customerId := c.GetString(middlewares.CUSTOMERID)
+    customerId := c.MustGet("userType").(string)
+    if customerId != utils.CustomerTokenType {
+        c.JSON(http.StatusForbidden,
+            gin.H{"message": "Access denied"})
+        return
+    }
+
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -95,7 +118,13 @@ func updateQuantity(c *gin.Context) {
 }
 
 func removeItemFromCart(c *gin.Context) {
-	customerId := c.GetString(middlewares.CUSTOMERID)
+    customerId := c.MustGet("userType").(string)
+    if customerId != utils.CustomerTokenType {
+        c.JSON(http.StatusForbidden,
+            gin.H{"message": "Access denied"})
+        return
+    }
+
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 

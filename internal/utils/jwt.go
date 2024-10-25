@@ -1,57 +1,49 @@
 package utils
 
 import (
-	"errors"
+	//"errors"
 	"fmt"
-	"log"
+	//"log"
 	"os"
 	"time"
-
+    "net/http"
 	"github.com/golang-jwt/jwt/v5"
+)
+
+const (
+    CustomerTokenType = "customer"
+    AdminTokenType = "admin"
 )
 
 var privateKey = []byte(os.Getenv("JWT_PRIVATE_KEY"))
 
-func GenerateToken(customerId string) (string, error) {
-	if customerId == "" {
-		return "", fmt.Errorf("customer id is empty")
-	}
+func GenerateToken(userType string, id interface{}) (string, error) {
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+        "type": userType,
+        "id":   id,
+        "exp":  time.Now().Add(time.Hour * 6).Unix(), // Token expira em 6 horas
+    }) 
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"customerId": customerId,
-		"exp":        time.Now().Add(time.Hour * 6).Unix(),
-	})
-
-	return token.SignedString([]byte(privateKey))
+    return token.SignedString([]byte(privateKey))
 }
 
-func VerifyToken(token string) (string, error) {
-	parsedToken, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
-		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, errors.New("unexpected signing method")
-		}
-		return []byte(privateKey), nil
-	})
+func ValidateToken(tokenString string) (string, interface{}, error) {
+    token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+        if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+            return nil, http.ErrNotSupported
+        }
+        return []byte(privateKey), nil
+    })
 
-	if err != nil {
-		log.Printf("token err: %v", err)
-		return "", errors.New("could not parse token")
-	}
+    if err != nil {
+        return "", nil, err
+    }
 
-	if !parsedToken.Valid {
-		log.Printf("parse token err: %v", err)
-		return "", errors.New("invalid token")
-	}
+    if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+        return claims["type"].(string), claims["id"], nil // Retorna o tipo de usuário e ID
+    }
 
-	claims, ok := parsedToken.Claims.(jwt.MapClaims)
-	if !ok {
-		return "", errors.New("invalid token claims")
-	}
-
-	customerId, ok := claims["customerId"].(string)
-	if !ok {
-		return "", errors.New("customer id is not a valid float64")
-	}
-
-	return customerId, nil
+    return "", nil, fmt.Errorf("invalid token: %v", err)
 }
+
+

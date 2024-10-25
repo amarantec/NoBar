@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const CUSTOMERID = "customerId"
 
 func Auth(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
@@ -17,13 +16,14 @@ func Auth(c *gin.Context) {
 		return
 	}
 
-	customerId, err := utils.VerifyToken(token)
+	userType, id, err := utils.ValidateToken(token)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "could not authenticate session",
 			"error": err.Error()})
 		return
 	}
 
-	c.Set(CUSTOMERID, customerId)
+    c.Set("userType", userType)
+	c.Set("id", id)
 	c.Next()
 }

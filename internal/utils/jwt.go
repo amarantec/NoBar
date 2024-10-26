@@ -1,9 +1,7 @@
 package utils
 
 import (
-	//"errors"
 	"fmt"
-	//"log"
 	"os"
 	"time"
     "net/http"

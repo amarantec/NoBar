@@ -133,13 +133,13 @@ func updateProduct(c *gin.Context) {
     ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-    product := models.Produtcs{}
+    product := models.Products{}
 
     if err :=
         c.ShouldBindJSON(&product); err != nil {
             c.JSON(http.StatusBadRequest,
                 gin.H{"message": "could not decode this request",
-                    "error": err.Error()}
+                    "error": err.Error()})
              return
         }
 
@@ -147,7 +147,7 @@ func updateProduct(c *gin.Context) {
     if err != nil {
         c.JSON(http.StatusInternalServerError,
             gin.H{"message": "could not update this product",
-                "error": err.Error()}
+                "error": err.Error()})
         return
     }
 
@@ -176,7 +176,7 @@ func deleteProduct(c *gin.Context) {
     if err != nil {
         c.JSON(http.StatusInternalServerError,
             gin.H{"message": "could not delete this product",
-                "error": err.Error()}
+                "error": err.Error()})
         return
     }
 

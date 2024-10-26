@@ -22,6 +22,7 @@ func SetRoutes(r *gin.Engine) {
 		categoriesGroup.POST("/insert-category", middlewares.Auth, insertCategory)
 		categoriesGroup.GET("/list-categories", listCategories)
 		categoriesGroup.GET("/get-category/:categoryId", getCategory)
+        categoriesGroup.PUT("/update-category", middlewares.Auth, updateCategory)
 		categoriesGroup.DELETE("/delete-category/:categoryId", middlewares.Auth, deleteCategory)
 	}
 

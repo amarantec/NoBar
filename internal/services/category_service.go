@@ -50,6 +50,24 @@ func (s *ServicePostgres) GetCategory(ctx context.Context, id uint) (models.Cate
 	return category, nil
 }
 
+func (s *ServicePostgres) UpdateCategory(ctx context.Context, category models.Categories) (bool, error) {
+    result :=
+        s.Db.WithContext(ctx).
+        Where("id = ?", category.ID).
+        Updates(models.Categories{
+            Name: category.Name,
+            URL: category.URL,
+        })
+
+    if result.Error != nil {
+        return false, result.Error
+    } else if result.RowsAffected == 0 {
+        return false, nil
+    }
+
+    return true, nil
+}
+        
 func (s *ServicePostgres) DeleteCategory(ctx context.Context, id uint) (bool, error) {
 	if err :=
 		s.Db.WithContext(ctx).
